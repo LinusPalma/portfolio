@@ -1,0 +1,8 @@
+services:
+  tst-portfolio:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: tst-portfolio
+    ports:
+      - "3018:80"
