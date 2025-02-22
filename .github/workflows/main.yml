@@ -23,6 +23,6 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./frontend
+          context: .
           push: true
           tags: ghcr.io/linuspalma/portfolio:latest
