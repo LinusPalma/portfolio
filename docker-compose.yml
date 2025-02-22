@@ -1,8 +1,6 @@
 services:
-  tst-portfolio:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    container_name: tst-portfolio
+  portfolio:
+    image: ghcr.io/linuspalma/portfolio:latest
+    container_name: portfolio
     ports:
-      - "3018:80"
+      - "3019:80"
