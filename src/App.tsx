@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const PortfolioPage = () => {
+  const { t } = useTranslation();
+  
   const [currentSection, setCurrentSection] = useState(0);
   const [scrollPosition, setScrollPosition] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -171,8 +174,8 @@ const PortfolioPage = () => {
         className="text-center pointer-events-none"
         style={nameHeaderStyle}
       >
-        <h1 className="text-4xl font-bold mb-2 text-blue-900">Maria Muster</h1>
-        <h2 className="text-xl text-blue-600">Musterberuf</h2>
+        <h1 className="text-4xl font-bold mb-2 text-blue-900">{t('header.name')}</h1>
+        <h2 className="text-xl text-blue-600">{t('header.job')}</h2>
       </div>
 
       {/* Section Header - wandert nach oben */}
@@ -181,10 +184,10 @@ const PortfolioPage = () => {
         style={sectionHeaderStyle}
       >
         <h2 className="text-2xl font-bold text-blue-900">
-          {currentSection === 2 ? 'Berufliche Laufbahn' :
-           currentSection === 3 ? 'Bildungsabschlüsse' :
-           currentSection === 4 ? 'Soft Skills' :
-           currentSection === 5 ? 'Hobbys' : ''}
+          {currentSection === 2 ? t('sections.career') :
+           currentSection === 3 ? t('sections.education') :
+           currentSection === 4 ? t('sections.skills') :
+           currentSection === 5 ? t('sections.hobbies') : ''}
         </h2>
       </div>
 
@@ -207,10 +210,10 @@ const PortfolioPage = () => {
         <div className="max-w-4xl w-full px-6">
           <div className="space-y-8">
             {[
-              { title: 'Berufliche Laufbahn', index: 2 },
-              { title: 'Bildungsabschlüsse', index: 3 },
-              { title: 'Soft Skills', index: 4 },
-              { title: 'Hobbys', index: 5 }
+              { title: t('sections.career'), index: 2 },
+              { title: t('sections.education'), index: 3 },
+              { title: t('sections.skills'), index: 4 },
+              { title: t('sections.hobbies'), index: 5 }
             ].map((item) => (
               <div 
                 key={item.title}

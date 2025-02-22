@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "career": "Career Path",
+    "education": "Education",
+    "skills": "Soft Skills",
+    "hobbies": "Hobbies"
+  },
+  "header": {
+    "name": "Maria Muster",
+    "job": "Sample Profession"
+  }
+}
