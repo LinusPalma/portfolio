@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #ffffff;
+  --color-background-dark: #242424;
+  --color-text: #213547;
+  --color-text-dark: rgba(255, 255, 255, 0.87);
+  --color-primary: #646cff;
+  --color-primary-hover: #747bff;
+  --color-secondary: #61dafb;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply m-0 min-h-screen;
+    overscroll-behavior-y: contain;
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  .dark body {
+    background-color: var(--color-background-dark);
+    color: var(--color-text-dark);
+  }
+}
+
+@layer utilities {
+  .snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
