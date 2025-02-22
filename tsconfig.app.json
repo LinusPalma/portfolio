@@ -26,8 +26,12 @@
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@i18n/*": ["src/i18n/*"],
+      "@pages/*": ["src/pages/*"],
       "@styles/*": ["src/styles/*"],
-      "@i18n/*": ["src/i18n/*"]
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
     }
   },
   "include": ["src"]

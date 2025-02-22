@@ -1,6 +1,14 @@
 {
   "sections": {
-    "career": "Berufliche Laufbahn",
+    "career": {
+      "title": "Berufliche Laufbahn",
+      "description": "Hier finden Sie Informationen zu meiner beruflichen Laufbahn.",
+      "job1": {
+        "title": "Entwickler",
+        "date": "2018 - 2020",
+        "description": "Beschreibung Job 1"
+      }
+    },
     "education": "Bildungsabschlüsse",
     "skills": "Soft Skills",
     "hobbies": "Hobbys"
