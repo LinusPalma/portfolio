@@ -1,4 +1,5 @@
 import { useEffect, useCallback, RefObject, useState } from 'react';
+import { ScrollHelper } from '@/utils/scroll-helpers';
 
 interface UseScrollPositionProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -39,59 +40,42 @@ export const useScrollPosition = ({
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       
-      const now = Date.now();
-      if (now - lastScrollTime < 50) return; // Debounce schnelle Scroll-Events
-      setLastScrollTime(now);
+      if (ScrollHelper.isScrollDebounced(lastScrollTime)) return;
+      setLastScrollTime(Date.now());
 
-      const currentSectionElement = document.querySelector(`[data-section="${currentSection}"]`);
-      const isCareerSection = currentSectionElement?.getAttribute('data-section') === '2';
+      const { section: careerSection, horizontalContainer } = ScrollHelper.getCareerSectionElements();
+      const isCareerSection = careerSection?.getAttribute('data-section') === '2';
       
-      if (isCareerSection) {
-        const horizontalContainer = currentSectionElement.querySelector('.overflow-x-auto') as HTMLElement;
-        if (horizontalContainer) {
-          const maxScroll = horizontalContainer.scrollWidth - horizontalContainer.clientWidth;
-          const currentScroll = horizontalContainer.scrollLeft;
-          
-          // Bestimme die dominante Scroll-Richtung
-          const isHorizontalScroll = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-          const scrollDelta = isHorizontalScroll ? e.deltaX : e.deltaY;
+      if (isCareerSection && horizontalContainer) {
+        const scrollDirection = ScrollHelper.getDominantScrollDirection(e.deltaX, e.deltaY);
+        const scrollDelta = scrollDirection === 'horizontal' ? e.deltaX : e.deltaY;
 
-          // Wenn wir bereits horizontal scrollen, behalten wir diese Richtung bei
-          if (isHorizontalScrolling || isHorizontalScroll) {
-            setIsHorizontalScrolling(true);
-            
-            const newScrollPosition = currentScroll + scrollDelta;
+        if (isHorizontalScrolling || scrollDirection === 'horizontal') {
+          setIsHorizontalScrolling(true);
 
-            // Prüfe ob wir am Ende oder Anfang des horizontalen Scrolls sind
-            if (scrollDelta > 0 && currentScroll >= maxScroll - 1) {
-              setIsHorizontalScrolling(false);
-              scrollToSection(3);
-            } else if (scrollDelta < 0 && currentScroll <= 0) {
-              setIsHorizontalScrolling(false);
-              scrollToSection(1);
-            } else {
-              horizontalContainer.scrollTo({
-                left: newScrollPosition,
-                behavior: 'smooth'
-              });
-            }
-            return;
+          if (ScrollHelper.isHorizontalScrollEnd(horizontalContainer, scrollDelta)) {
+            setIsHorizontalScrolling(false);
+            scrollToSection(3);
+          } else if (ScrollHelper.isHorizontalScrollStart(horizontalContainer, scrollDelta)) {
+            setIsHorizontalScrolling(false);
+            scrollToSection(1);
+          } else {
+            horizontalContainer.scrollTo({
+              left: horizontalContainer.scrollLeft + scrollDelta,
+              behavior: 'smooth'
+            });
           }
+          return;
         }
       } else {
-        // Reset horizontal scrolling state when leaving career section
         setIsHorizontalScrolling(false);
       }
 
-      // Vertikales Scrollen für andere Sektionen
-      const sectionHeight = window.innerHeight;
-      const currentSectionIndex = Math.round(container.scrollTop / sectionHeight);
-      const nextSectionIndex = e.deltaY > 0 
-        ? Math.min(currentSectionIndex + 1, 5)
-        : Math.max(currentSectionIndex - 1, 0);
+      const currentSectionIndex = Math.round(container.scrollTop / ScrollHelper.SECTION_HEIGHT);
+      const nextSectionIndex = ScrollHelper.calculateNextSectionIndex(currentSectionIndex, e.deltaY, 5);
 
       container.scrollTo({
-        top: nextSectionIndex * sectionHeight,
+        top: nextSectionIndex * ScrollHelper.SECTION_HEIGHT,
         behavior: 'smooth'
       });
     };
@@ -101,12 +85,10 @@ export const useScrollPosition = ({
   }, [currentSection, scrollToSection, containerRef, lastScrollTime, isHorizontalScrolling]);
 
   const scrollToCareerSlide = useCallback((slideIndex: number) => {
-    const careerSection = document.querySelector('[data-section="2"]');
-    const horizontalContainer = careerSection?.querySelector('.overflow-x-auto') as HTMLElement;
+    const { horizontalContainer } = ScrollHelper.getCareerSectionElements();
     if (horizontalContainer) {
-      const slideWidth = window.innerWidth;
       horizontalContainer.scrollTo({
-        left: slideWidth * slideIndex,
+        left: ScrollHelper.SLIDE_WIDTH * slideIndex,
         behavior: 'smooth'
       });
     }
